@@ -222,7 +222,7 @@
   <!-- Header -->
   <div class="header">
     <div class="logo">📊</div>
-    <h1>MARKET DAILY</h1>
+    <h1>每日市场简报</h1>
     <div class="date">{{ date }}</div>
     <div class="tag-row">
       <span class="tag count">{{ article_count }} 篇精选</span>
@@ -238,7 +238,7 @@
     <ol>
       {% for article in articles %}
       <li>
-        <a href="{{ article.link }}">{{ article.title }}</a>
+        <a href="{{ article.link }}">{{ article.title_cn if article.title_cn else article.title }}</a>
         <span class="toc-source">— {{ article.source }}</span>
       </li>
       {% endfor %}
@@ -252,7 +252,7 @@
       <span class="card-num">{{ loop.index }}</span>
       <span class="card-source">{{ article.source }}</span>
       <span class="card-date">{{ article.published[:10] }}</span>
-      <h2><a href="{{ article.link }}">{{ article.title }}</a></h2>
+      <h2><a href="{{ article.link }}">{{ article.title_cn if article.title_cn else article.title }}</a></h2>
     </div>
 
     {% if '【分析】' in article.ai_summary %}
@@ -285,7 +285,7 @@
 
   <!-- Footer -->
   <div class="footer">
-    MARKET DAILY · 由 Gemini AI 自动生成 · 数据来自 RSS 公开源<br>
+    每日市场简报 · 由 Gemini AI 自动生成 · 数据来自 RSS 公开源<br>
     本邮件仅供参考，不构成投资建议
   </div>
 
