@@ -176,16 +176,26 @@
       <span>{{ article.published[:10] }}</span>
     </div>
 
-    {% set parts = article.ai_summary.split('\n\n') %}
+    {% if '【分析】' in article.ai_summary %}
+      {% set summary_part = article.ai_summary.split('【分析】')[0].replace('【总结】', '').strip() %}
+      {% set analysis_part = article.ai_summary.split('【分析】')[1].strip() %}
+    {% elif '\n\n' in article.ai_summary %}
+      {% set summary_part = article.ai_summary.split('\n\n')[0].replace('【总结】', '').strip() %}
+      {% set analysis_part = article.ai_summary.split('\n\n')[1].strip() %}
+    {% else %}
+      {% set summary_part = article.ai_summary.replace('【总结】', '').strip() %}
+      {% set analysis_part = '' %}
+    {% endif %}
+
     <div class="summary-section">
       <div class="label">详细总结</div>
-      <div class="content">{{ parts[0] if parts|length > 0 else article.ai_summary }}</div>
+      <div class="content">{{ summary_part }}</div>
     </div>
 
-    {% if parts|length > 1 %}
+    {% if analysis_part %}
     <div class="analysis">
       <div class="label" style="color:#58a6ff;">💡 分析</div>
-      <div class="content">{{ parts[1] }}</div>
+      <div class="content">{{ analysis_part }}</div>
     </div>
     {% endif %}
 
