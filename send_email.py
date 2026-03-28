@@ -10,8 +10,8 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from config import SMTP_SERVER, SMTP_PORT, EMAIL_SENDER, EMAIL_PASSWORD, EMAIL_RECIPIENT
 
 
-def render_email(articles: list[dict]) -> str:
-    """Render the HTML email from template + articles."""
+def render_email(articles: list[dict], market_data: dict = None) -> str:
+    """Render the HTML email from template + articles + market data."""
     import os
     template_dir = os.path.dirname(os.path.abspath(__file__))
     env = Environment(
@@ -25,6 +25,7 @@ def render_email(articles: list[dict]) -> str:
         date=now.strftime("%Y年%m月%d日 (UTC)"),
         article_count=len(articles),
         articles=articles,
+        market=market_data or {},
     )
     return html
 
