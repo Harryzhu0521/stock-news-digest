@@ -1,5 +1,6 @@
 """Fetch stock market data from Yahoo Finance (yfinance) and FRED."""
 
+import requests
 import yfinance as yf
 
 
@@ -79,6 +80,100 @@ def _fetch_quote(ticker: str) -> dict:
     return {}
 
 
+# --- Options / Volatility ---
+OPTIONS_TICKERS = {
+    "^VIX": "VIX",
+    "^VIX3M": "VIX3M (3个月)",
+}
+
+# IV tracking for major stocks
+IV_STOCKS = ["NVDA", "TSLA", "AAPL", "MSFT", "AMZN", "META", "SPY", "QQQ"]
+
+
+def _fetch_put_call_ratio() -> dict:
+    """Fetch CBOE Total Put/Call Ratio."""
+    try:
+        # Use FRED for equity put/call (not available), fallback to yfinance for proxy
+        # We'll compute from SPY options chain as a proxy
+        spy = yf.Ticker("SPY")
+        exp = spy.options[0]  # nearest expiry
+        calls = spy.option_chain(exp).calls
+        puts = spy.option_chain(exp).puts
+        call_vol = calls["volume"].sum()
+        put_vol = puts["volume"].sum()
+        if call_vol > 0:
+            ratio = put_vol / call_vol
+            return {
+                "ratio": round(ratio, 3),
+                "put_vol": int(put_vol),
+                "call_vol": int(call_vol),
+                "expiry": exp,
+            }
+    except Exception:
+        pass
+    return {}
+
+
+def _fetch_iv(ticker: str) -> float | None:
+    """Fetch approximate implied volatility for a stock from nearest-expiry ATM options."""
+    try:
+        t = yf.Ticker(ticker)
+        price = t.fast_info.get("lastPrice", None)
+        if not price:
+            return None
+        exp = t.options[0]
+        chain = t.option_chain(exp)
+        calls = chain.calls
+        # Find ATM call (closest strike to current price)
+        calls = calls[calls["impliedVolatility"] > 0].copy()
+        if calls.empty:
+            return None
+        calls["strike_diff"] = (calls["strike"] - price).abs()
+        atm = calls.loc[calls["strike_diff"].idxmin()]
+        return round(atm["impliedVolatility"] * 100, 1)
+    except Exception:
+        return None
+
+
+def fetch_options_data() -> dict:
+    """Fetch options market data: VIX term structure, P/C ratio, IVs."""
+    result = {}
+
+    # VIX term structure
+    vix_data = {}
+    for ticker, name in OPTIONS_TICKERS.items():
+        data = _fetch_quote(ticker)
+        if data:
+            vix_data[name] = data
+    result["vix"] = vix_data
+
+    # VIX contango/backwardation
+    if "VIX" in vix_data and "VIX3M (3个月)" in vix_data:
+        vix_val = vix_data["VIX"]["price"]
+        vix3m_val = vix_data["VIX3M (3个月)"]["price"]
+        if vix3m_val > 0:
+            ratio = vix_val / vix3m_val
+            result["vix_term"] = {
+                "ratio": round(ratio, 3),
+                "status": "Backwardation (近期恐慌)" if ratio > 1 else "Contango (正常)",
+            }
+
+    # Put/Call ratio
+    pc = _fetch_put_call_ratio()
+    if pc:
+        result["put_call"] = pc
+
+    # Implied volatility for major stocks
+    ivs = {}
+    for ticker in IV_STOCKS:
+        iv = _fetch_iv(ticker)
+        if iv is not None:
+            ivs[ticker] = iv
+    result["ivs"] = ivs
+
+    return result
+
+
 def fetch_indices() -> dict:
     """Fetch major index data."""
     results = {}
@@ -121,11 +216,12 @@ def fetch_treasuries() -> dict:
     return results
 
 
-def format_market_data(indices: dict, tech: dict, sectors: list, treasuries: dict) -> dict:
+def format_market_data(indices: dict, tech: dict, sectors: list, treasuries: dict, options: dict) -> dict:
     """Format all market data into structured dict for template rendering."""
     return {
         "indices": indices,
         "tech_stocks": tech,
         "sectors": sectors,
         "treasuries": treasuries,
+        "options": options,
     }

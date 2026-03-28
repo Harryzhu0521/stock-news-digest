@@ -3,7 +3,7 @@
 import sys
 
 from fetch_news import fetch_articles
-from fetch_market import fetch_indices, fetch_tech_stocks, fetch_sectors, fetch_treasuries, format_market_data
+from fetch_market import fetch_indices, fetch_tech_stocks, fetch_sectors, fetch_treasuries, fetch_options_data, format_market_data
 from summarize import summarize_articles
 from send_email import render_email, send_email
 
@@ -21,7 +21,9 @@ def main():
     print(f"  Sectors: {len(sectors)} loaded")
     treasuries = fetch_treasuries()
     print(f"  Treasuries: {len(treasuries)} loaded")
-    market_data = format_market_data(indices, tech, sectors, treasuries)
+    options = fetch_options_data()
+    print(f"  Options: VIX={len(options.get('vix', {}))} IVs={len(options.get('ivs', {}))}")
+    market_data = format_market_data(indices, tech, sectors, treasuries, options)
 
     # Step 2: Fetch news
     print("\n[2/4] Fetching news from RSS feeds...")

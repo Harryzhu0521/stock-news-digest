@@ -154,6 +154,54 @@
   </div>
   {% endif %}
 
+  <!-- Options Market -->
+  {% if market.options %}
+  <div class="dashboard">
+    <div class="dash-title">📉 期权市场</div>
+    <div class="dash-grid">
+      {% if market.options.vix %}
+        {% for name, d in market.options.vix.items() %}
+        <div class="dash-item">
+          <div class="label">{{ name }}</div>
+          <div class="value">{{ "%.2f"|format(d.price) }}</div>
+          <div class="change {{ 'up' if d.change_pct > 0 else ('down' if d.change_pct < 0 else 'flat') }}">
+            {{ "%+.2f"|format(d.change_pct) }}%
+          </div>
+        </div>
+        {% endfor %}
+      {% endif %}
+      {% if market.options.put_call %}
+      <div class="dash-item">
+        <div class="label">P/C Ratio (SPY)</div>
+        <div class="value">{{ market.options.put_call.ratio }}</div>
+        <div class="change flat">{{ market.options.put_call.expiry }}</div>
+      </div>
+      {% endif %}
+      {% if market.options.vix_term %}
+      <div class="dash-item">
+        <div class="label">VIX期限结构</div>
+        <div class="value" style="font-size:12px;">{{ market.options.vix_term.status }}</div>
+        <div class="change flat">VIX/VIX3M = {{ market.options.vix_term.ratio }}</div>
+      </div>
+      {% endif %}
+    </div>
+
+    {% if market.options.ivs %}
+    <div style="margin-top: 12px;">
+      <div style="font-size: 11px; color: #64748b; margin-bottom: 8px;">隐含波动率 (ATM IV%)</div>
+      <div class="dash-grid dash-grid-4" style="grid-template-columns: repeat(4, 1fr);">
+        {% for ticker, iv in market.options.ivs.items() %}
+        <div class="dash-item">
+          <div class="label">{{ ticker }}</div>
+          <div class="value" style="font-size:14px;">{{ iv }}%</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
   <!-- 2. Tech Stocks -->
   {% if market.tech_stocks %}
   <div class="dashboard">
