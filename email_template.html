@@ -3,177 +3,256 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--[if mso]><style>table,td{font-family:Arial,sans-serif!important}</style><![endif]-->
 <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background-color: #0d1117;
-    color: #e6edf3;
-    margin: 0;
-    padding: 0;
+    background-color: #0a0a0a;
+    color: #e0e0e0;
+    -webkit-font-smoothing: antialiased;
   }
-  .container {
-    max-width: 720px;
+  .wrapper {
+    max-width: 680px;
     margin: 0 auto;
-    padding: 24px 16px;
+    padding: 0 12px;
   }
+
+  /* ── Header ── */
   .header {
     text-align: center;
-    padding: 32px 0 24px;
-    border-bottom: 1px solid #30363d;
-    margin-bottom: 24px;
+    padding: 40px 20px 28px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    border-bottom: 2px solid #6366f1;
+  }
+  .header .logo {
+    font-size: 32px;
+    margin-bottom: 4px;
   }
   .header h1 {
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 700;
-    color: #58a6ff;
-    margin: 0 0 8px;
-    letter-spacing: -0.5px;
-  }
-  .header .date {
-    font-size: 14px;
-    color: #8b949e;
-  }
-  .header .stats {
-    margin-top: 12px;
-    font-size: 13px;
-    color: #8b949e;
-  }
-  .stats span {
-    display: inline-block;
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 16px;
-    padding: 4px 12px;
-    margin: 2px 4px;
-  }
-  .article {
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 16px;
-    transition: border-color 0.2s;
-  }
-  .article-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  .article-index {
-    background: #58a6ff;
-    color: #0d1117;
-    font-weight: 700;
-    font-size: 12px;
-    min-width: 28px;
-    height: 28px;
-    line-height: 28px;
-    text-align: center;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .article h2 {
-    font-size: 17px;
-    font-weight: 600;
-    margin: 0;
-    line-height: 1.4;
-  }
-  .article h2 a {
-    color: #58a6ff;
-    text-decoration: none;
-  }
-  .article h2 a:hover {
-    text-decoration: underline;
-  }
-  .meta {
-    font-size: 12px;
-    color: #8b949e;
-    margin-bottom: 14px;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .meta .source {
-    background: #1f2937;
-    border-radius: 4px;
-    padding: 2px 8px;
-    font-weight: 500;
-    color: #7ee787;
-  }
-  .summary-section {
-    margin-bottom: 12px;
-  }
-  .summary-section .label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #8b949e;
+    color: #e2e8f0;
+    letter-spacing: 2px;
     margin-bottom: 6px;
   }
-  .summary-section .content {
-    font-size: 14px;
-    line-height: 1.7;
-    color: #c9d1d9;
-  }
-  .analysis {
-    background: #1a2332;
-    border-left: 3px solid #58a6ff;
-    padding: 10px 14px;
-    border-radius: 0 6px 6px 0;
-    margin-top: 8px;
-  }
-  .analysis .content {
+  .header .date {
     font-size: 13px;
-    line-height: 1.6;
-    color: #a5d6ff;
+    color: #94a3b8;
+    margin-bottom: 14px;
   }
-  .read-more {
+  .tag-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tag {
     display: inline-block;
-    margin-top: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(99,102,241,0.4);
+    color: #a5b4fc;
+    background: rgba(99,102,241,0.1);
+  }
+  .tag.count {
+    color: #34d399;
+    border-color: rgba(52,211,153,0.4);
+    background: rgba(52,211,153,0.08);
+  }
+
+  /* ── TOC (Table of Contents) ── */
+  .toc {
+    background: #111318;
+    border: 1px solid #1e2130;
+    border-radius: 10px;
+    margin: 20px 0;
+    padding: 16px 20px;
+  }
+  .toc-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6366f1;
+    margin-bottom: 10px;
+  }
+  .toc ol {
+    padding-left: 20px;
+    margin: 0;
+  }
+  .toc li {
     font-size: 13px;
-    color: #58a6ff;
+    line-height: 1.8;
+    color: #94a3b8;
+  }
+  .toc li a {
+    color: #cbd5e1;
     text-decoration: none;
-    font-weight: 500;
   }
-  .read-more:hover {
-    text-decoration: underline;
+  .toc li a:hover {
+    color: #a5b4fc;
   }
+  .toc li .toc-source {
+    font-size: 11px;
+    color: #475569;
+    margin-left: 4px;
+  }
+
+  /* ── Article Card ── */
+  .card {
+    background: #111318;
+    border: 1px solid #1e2130;
+    border-radius: 10px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .card-top {
+    padding: 18px 20px 0;
+  }
+  .card-num {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    color: #6366f1;
+    background: rgba(99,102,241,0.12);
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    border-radius: 8px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .card-source {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #34d399;
+    background: rgba(52,211,153,0.1);
+    padding: 3px 10px;
+    border-radius: 4px;
+    vertical-align: middle;
+  }
+  .card-date {
+    display: inline-block;
+    font-size: 11px;
+    color: #475569;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .card h2 {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.45;
+    margin: 10px 0 0;
+  }
+  .card h2 a {
+    color: #e2e8f0;
+    text-decoration: none;
+  }
+
+  /* ── Summary ── */
+  .card-body {
+    padding: 14px 20px 0;
+  }
+  .card-body p {
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: #b0bec5;
+    margin: 0;
+  }
+
+  /* ── Analysis ── */
+  .card-analysis {
+    margin: 12px 20px 0;
+    padding: 10px 14px;
+    background: rgba(99,102,241,0.06);
+    border-left: 3px solid #6366f1;
+    border-radius: 0 8px 8px 0;
+  }
+  .card-analysis .analysis-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #818cf8;
+    margin-bottom: 4px;
+  }
+  .card-analysis p {
+    font-size: 13px;
+    line-height: 1.65;
+    color: #c7d2fe;
+    margin: 0;
+  }
+
+  /* ── Card Footer ── */
+  .card-foot {
+    padding: 12px 20px 16px;
+    text-align: right;
+  }
+  .card-foot a {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6366f1;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+  }
+  .card-foot a:hover { text-decoration: underline; }
+
+  /* ── Footer ── */
   .footer {
     text-align: center;
-    padding: 24px 0;
-    margin-top: 16px;
-    border-top: 1px solid #30363d;
-    font-size: 12px;
-    color: #484f58;
+    padding: 28px 16px;
+    font-size: 11px;
+    color: #334155;
+    line-height: 1.7;
+    border-top: 1px solid #1e2130;
+    margin-top: 8px;
   }
-  .divider {
-    height: 1px;
-    background: #21262d;
-    margin: 8px 0;
-  }
+  .footer a { color: #475569; text-decoration: none; }
 </style>
 </head>
 <body>
-<div class="container">
+<div class="wrapper">
+
+  <!-- Header -->
   <div class="header">
-    <h1>📊 每日市场新闻简报</h1>
+    <div class="logo">📊</div>
+    <h1>MARKET DAILY</h1>
     <div class="date">{{ date }}</div>
-    <div class="stats">
-      <span>📰 {{ article_count }} 篇精选</span>
-      <span>🎯 股票 · 期权 · 科技</span>
+    <div class="tag-row">
+      <span class="tag count">{{ article_count }} 篇精选</span>
+      <span class="tag">股票</span>
+      <span class="tag">期权</span>
+      <span class="tag">科技</span>
     </div>
   </div>
 
+  <!-- Table of Contents -->
+  <div class="toc">
+    <div class="toc-title">📋 今日速览</div>
+    <ol>
+      {% for article in articles %}
+      <li>
+        <a href="{{ article.link }}">{{ article.title }}</a>
+        <span class="toc-source">— {{ article.source }}</span>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+
+  <!-- Articles -->
   {% for article in articles %}
-  <div class="article">
-    <div class="article-header">
-      <div class="article-index">{{ loop.index }}</div>
+  <div class="card">
+    <div class="card-top">
+      <span class="card-num">{{ loop.index }}</span>
+      <span class="card-source">{{ article.source }}</span>
+      <span class="card-date">{{ article.published[:10] }}</span>
       <h2><a href="{{ article.link }}">{{ article.title }}</a></h2>
-    </div>
-    <div class="meta">
-      <span class="source">{{ article.source }}</span>
-      <span>{{ article.published[:10] }}</span>
     </div>
 
     {% if '【分析】' in article.ai_summary %}
@@ -187,26 +266,29 @@
       {% set analysis_part = '' %}
     {% endif %}
 
-    <div class="summary-section">
-      <div class="label">详细总结</div>
-      <div class="content">{{ summary_part }}</div>
+    <div class="card-body">
+      <p>{{ summary_part }}</p>
     </div>
 
     {% if analysis_part %}
-    <div class="analysis">
-      <div class="label" style="color:#58a6ff;">💡 分析</div>
-      <div class="content">{{ analysis_part }}</div>
+    <div class="card-analysis">
+      <div class="analysis-label">💡 投资分析</div>
+      <p>{{ analysis_part }}</p>
     </div>
     {% endif %}
 
-    <a class="read-more" href="{{ article.link }}">阅读原文 →</a>
+    <div class="card-foot">
+      <a href="{{ article.link }}">阅读原文 →</a>
+    </div>
   </div>
   {% endfor %}
 
+  <!-- Footer -->
   <div class="footer">
-    由 Gemini AI 自动生成 · 数据来自 RSS 公开源<br>
+    MARKET DAILY · 由 Gemini AI 自动生成 · 数据来自 RSS 公开源<br>
     本邮件仅供参考，不构成投资建议
   </div>
+
 </div>
 </body>
 </html>
